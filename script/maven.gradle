@@ -1,0 +1,135 @@
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+//相关网站：https://shaolongfei.com/2022/04/23/upload-maven/
+//https://www.cnblogs.com/lizhanqi/p/16914969.html
+task sourceJar(type: Jar) {
+    from project.android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+//task javadoc(type: Javadoc) {
+//    dependsOn 'assembleRelease'
+//    source = android.sourceSets.main.java.srcDirs +
+//            'build/generated/not_namespaced_r_class_sources/release/generateReleaseRFile/out/com/sensorsdata/analytics/android/sdk/R.java'
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+
+//javadoc {
+//    options {
+//        encoding "UTF-8"
+//        charSet 'UTF-8'
+//    }
+//}
+
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+// 控制是否发布到测试 beta 版本
+def isBeta = true
+def betaPrefix = "Beta"
+
+def groupId_maven='com.github.hooieray.android'
+def artifactId_maven=project.name
+
+if (isBeta) {
+    artifactId_maven = "logger-" + betaPrefix
+} else {
+    artifactId_maven = "logger"
+}
+version = rootProject.ext.versions.logger_version
+
+
+publishing {
+    publications {
+        mavenAndroid(MavenPublication) {
+            groupId = groupId_maven
+            artifactId = artifactId_maven
+            version = version
+            artifact sourceJar
+//            artifact javadocJar
+            artifact('build/outputs/aar/' + project.name + '-release.aar')
+            // 配置 pop 文件格式
+            pom {
+                packaging 'aar'
+                name = 'The official Android SDK .'
+                description = 'The official Android SDK .'
+                url = 'The official Android SDK .'
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'hooieRay'
+                        name = 'HooieRay'
+                        email = 'HooieRay@163.com'
+                    }
+                }
+                scm {
+                    //发布链接
+                    connection = 'scm:git:git://github.com/HooieRay/logger.git'
+                    //开发者链接
+                    developerConnection = 'scm:git:ssh://github.com/HooieRay/logger.git'
+                    //项目地址
+                    url = 'https://github.com/HooieRay/logger.git'
+                }
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    project.configurations.all { configuration ->
+                        def name = configuration.name
+                        if (name == 'implementation' || name == 'releaseImplementation') {
+                            configuration.allDependencies.each {
+                                if (it.group != null && it.name != "unspecified" && it.version != null) {
+                                    def groupId = it.group
+                                    def artifactId = it.name
+                                    def version = it.version
+                                    if (isBeta) {
+                                        artifactId = artifactId + "-" + betaPrefix
+                                    }
+                                    println("dependency:" + groupId + ":" + artifactId + ":" + version)
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', groupId)
+                                    dependencyNode.appendNode('artifactId', artifactId)
+                                    dependencyNode.appendNode('version', version)
+                                    dependencyNode.appendNode('scope', 'compile')
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // 配置远程仓库
+    repositories {
+//        Properties properties = new Properties()
+//        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//        def mavenUser = properties.getProperty("maven.user")
+//        def mavenPassword = properties.getProperty("maven.password")
+//        maven {
+//            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+//            credentials {
+//                username mavenUser
+//                password mavenPassword
+//            }
+//        }
+        maven {
+            // 发布到本地
+            url = '../repo'
+        }
+    }
+}
+
+// 对 mavenAndroid 发布内容进行签名
+//signing {
+//    sign publishing.publications.mavenAndroid
+//}
+
+static def getModuleArtifactId(moduleName) {
+    return moduleName.replace("module_", "")
+}

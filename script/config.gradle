@@ -1,0 +1,11 @@
+ext{
+    publish = [
+
+    ]
+
+    versions = [
+            logger_version :"1.0.0"
+    ]
+
+    //agp v-7.2.1 grade v-7.3.3
+}
