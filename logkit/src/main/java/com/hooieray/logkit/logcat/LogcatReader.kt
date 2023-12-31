@@ -1,4 +1,4 @@
-package com.hooieray.logger.logcat
+package com.hooieray.logkit.logcat
 
 import java.io.IOException
 import kotlin.jvm.Throws

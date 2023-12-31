@@ -58,6 +58,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Logger"
+rootProject.name = "LogKit"
 include ':demo'
-include ':logger'
+include ':logkit'

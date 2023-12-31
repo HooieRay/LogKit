@@ -1,4 +1,4 @@
-package com.hooieray.logger
+package com.hooieray.logkit
 
 import org.junit.Test
 

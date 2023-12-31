@@ -1,4 +1,4 @@
-package com.hooieray.logger
+package com.hooieray.logkit
 
 import android.content.Context
 

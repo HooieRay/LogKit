@@ -1,4 +1,4 @@
-package com.hooieray.logger.logcat
+package com.hooieray.logkit.logcat
 
 /**
  * 缓冲区：https://blog.51cto.com/u_16099228/6366032

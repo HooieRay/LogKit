@@ -1,8 +1,5 @@
-package com.hooieray.logger.logcat
+package com.hooieray.logkit.logcat
 
-import com.hooieray.logger.logcat.LogcatReader
-import com.hooieray.logger.logcat.LogcatUtils
-import com.hooieray.logger.logcat.RuntimeUtils
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

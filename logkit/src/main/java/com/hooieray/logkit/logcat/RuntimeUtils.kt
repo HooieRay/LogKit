@@ -1,4 +1,4 @@
-package com.hooieray.logger.logcat
+package com.hooieray.logkit.logcat
 
 object RuntimeUtils{
 
