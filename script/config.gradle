@@ -3,9 +3,13 @@ ext{
 
     ]
 
-    versions = [
-            logger_version :"1.0.0"
+    packages =[
+            isEmBedLogkitSDK:false
     ]
 
-    //agp v-7.2.1 grade v-7.3.3
+    versions = [
+            loggerVersion :"1.0.0",
+            logcatVersion :"1.0.0",
+            logkitVersion :"1.0.0"
+    ]
 }

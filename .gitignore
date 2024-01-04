@@ -34,3 +34,6 @@ google-services.json
 
 # repo
 .repo/
+
+# package repo
+.repo_aar/
